@@ -352,7 +352,7 @@ class checklist_class {
                     if ($item->displaytext != $modname) {
                         $this->updateitem($item->id, $modname, false, null, null, null, false, true);
                     }
-                    if (($item->hidden == CHECKLIST_HIDDEN_BYMODULE) && $mods->get_cm($cmid)->visible) {
+                    if (($item->hidden == CHECKLIST_HIDDEN_BYMODULE) && ($mods->get_cm($cmid)->visible && $mods->get_cm($cmid)->completion > 0)) {
                         // Course module was hidden and now is not.
                         $item->hidden = CHECKLIST_HIDDEN_NO;
                         $upd = new stdClass;
@@ -361,7 +361,7 @@ class checklist_class {
                         $DB->update_record('checklist_item', $upd);
                         $changes = true;
 
-                    } else if (($item->hidden == CHECKLIST_HIDDEN_NO) && !$mods->get_cm($cmid)->visible) {
+                    } else if (($item->hidden == CHECKLIST_HIDDEN_NO) && (!$mods->get_cm($cmid)->visible || !$mods->get_cm($cmid)->completion)) {
                         // Course module is now hidden.
                         $item->hidden = CHECKLIST_HIDDEN_BYMODULE;
                         $upd = new stdClass;
